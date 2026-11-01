@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in : Nida Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+    <div class="login-page-layout">
+        <!-- Sidebar: development team -->
+        <aside class="login-team-sidebar collapsed" id="teamSidebar">
+            <button class="login-team-toggle" id="teamToggle" type="button" aria-label="toggle sidebar">&#9776;</button>
+            <div class="login-team-content">
+                <div class="login-team-member">
+                    <img src="/static/aj.jpg" alt="Team Member">
+                    <div class="login-team-name">รศ.ดร. จงสวัสดิ์ จงวัฒน์ผล</div>
+                    <div class="login-team-role">คณะบริหารธุรกิจ<br>สถาบันบัณฑิตพัฒนบริหารศาสตร์</div>
+                </div>
+                <div class="login-team-member">
+                    <img src="/static/pq.jpg" alt="Team Member">
+                    <div class="login-team-name">ณัฐกุล พรเทพารักษ์</div>
+                    <div class="login-team-role">Ph.D. in Business Administration<br>Project Manager</div>
+                </div>
+                <div class="login-team-member">
+                    <img src="/static/diff.png" alt="Team Member">
+                    <div class="login-team-name">โชติพงษ์ แสงขุนทด</div>
+                    <div class="login-team-role">Professional MBA #19<br>Agentic AI Developer</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="login-main">
+            <!-- Left section: branding -->
+            <section class="login-left-section">
+                <div class="login-left-inner">
+                    <img src="/static/logo.jpg" alt="Project Logo" class="login-project-logo">
+                    <h1 class="login-main-title">NIDA HUB Virtual Assistant: Customer Complaint Chatbot for Service Training</h1>
+                    <p class="login-description">The NLP, LLM, and Generative AI Initiatives at NIDA Hub Natural Language Processing (NLP), Large Language Models (LLMs), and Generative AI: The NLP, LLM, and Gen AI projects and use cases to support the analysis and generation of human language for understanding and enhancement of human capabilities.</p>
+                    <div class="login-logos-row">
+                        <img src="/static/logo.jpg" alt="NIDA Hub" style="width: 80px">
+                        <img src="/static/nida_logo.png" alt="NIDA Business School" style="width: 100px">
+                    </div>
+                    <p class="login-copyright">Copyright &copy; 2026 NIDA Business School. All rights reserved.</p>
+                </div>
+            </section>
+
+            <!-- Right section: sign in card -->
+            <section class="login-right-section">
+                <div class="login-form-card">
+                    <h2 class="login-signin-title">Sign in</h2>
+                    <form class="login-form" id="loginForm">
+                        <div class="field">
+                            <label class="label" for="username">Username</label>
+                            <input class="input" id="username" type="text" autocomplete="username" placeholder="Enter username" required>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="password">Password</label>
+                            <input class="input" id="password" type="password" autocomplete="current-password" placeholder="•••••••" required>
+                        </div>
+                        <p class="login-error" id="loginError" role="alert"></p>
+                        <button class="login-signin-btn" id="signInBtn" type="submit">Sign In</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const teamSidebar = document.getElementById('teamSidebar');
+        document.getElementById('teamToggle').addEventListener('click', () => {
+            teamSidebar.classList.toggle('collapsed');
+        });
+
+        const form = document.getElementById('loginForm');
+        const errorText = document.getElementById('loginError');
+        const signInBtn = document.getElementById('signInBtn');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            errorText.textContent = '';
+            signInBtn.disabled = true;
+            signInBtn.textContent = 'Signing in...';
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: document.getElementById('username').value.trim(),
+                        password: document.getElementById('password').value
+                    })
+                });
+                if (response.ok) {
+                    window.location.href = '/';
+                    return;
+                }
+                errorText.textContent = response.status === 401
+                    ? 'Invalid username or password'
+                    : 'Login failed, please try again';
+            } catch (error) {
+                errorText.textContent = 'Cannot reach the server';
+            }
+            signInBtn.disabled = false;
+            signInBtn.textContent = 'Sign In';
+        });
+    </script>
+</body>
+</html>

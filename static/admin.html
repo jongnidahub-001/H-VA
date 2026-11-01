@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin : Nida Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-brand">
+            <img src="/static/logo.jpg" alt="Logo">
+            <div>
+                <div class="topbar-title">NIDA HUB Virtual Assistant</div>
+                <div class="topbar-sub">Admin</div>
+            </div>
+        </div>
+        <nav class="tabs" role="tablist">
+            <button class="tab active" data-tab="overview" type="button">Overview</button>
+            <button class="tab" data-tab="history" type="button">Chat History</button>
+            <button class="tab" data-tab="settings" type="button">Settings</button>
+        </nav>
+        <div class="topbar-user">
+            <span id="currentUser"></span>
+            <button class="btn btn-ghost" id="logoutBtn" type="button">Sign out</button>
+        </div>
+    </header>
+
+    <main class="content">
+        <!-- Overview -->
+        <section class="panel" id="tab-overview">
+            <h1>Overview</h1>
+            <div class="stats" id="stats">
+                <div class="stat"><div class="stat-value" id="statTotal">-</div><div class="stat-label">Evaluated cases</div></div>
+                <div class="stat"><div class="stat-value" id="statAgents">-</div><div class="stat-label">Agents</div></div>
+                <div class="stat"><div class="stat-value" id="statAiOn">-</div><div class="stat-label">AI enabled</div></div>
+                <div class="stat"><div class="stat-value" id="statAiOff">-</div><div class="stat-label">AI disabled</div></div>
+            </div>
+            <p class="muted" id="statLatest"></p>
+
+            <div class="card">
+                <h2>Reports</h2>
+                <p class="muted">ZIP file with an Excel score sheet and a Word summary of every evaluated case, split by whether the agent used AI.</p>
+                <div class="actions">
+                    <button class="btn btn-primary" id="reportAiOn" type="button">Download AI Enabled Reports</button>
+                    <button class="btn btn-primary" id="reportAiOff" type="button">Download AI Disabled Reports</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat History -->
+        <section class="panel" id="tab-history" hidden>
+            <h1>Chat History</h1>
+            <div class="filters">
+                <input class="input" id="filterText" type="search" placeholder="Search agent, domain, job position">
+                <select class="input" id="filterAi">
+                    <option value="all">AI: all</option>
+                    <option value="on">AI enabled</option>
+                    <option value="off">AI disabled</option>
+                </select>
+                <label class="date-filter">From <input class="input" id="filterFrom" type="date"></label>
+                <label class="date-filter">To <input class="input" id="filterTo" type="date"></label>
+            </div>
+            <div class="table-toolbar">
+                <span class="muted" id="caseCount"></span>
+                <div class="actions">
+                    <button class="btn btn-ghost" id="exportSelected" type="button" disabled>Export selected (Excel)</button>
+                    <button class="btn btn-primary" id="exportShown" type="button">Export shown (Excel)</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table class="cases">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll" aria-label="Select all"></th>
+                            <th>Date</th>
+                            <th>Agent</th>
+                            <th>AI</th>
+                            <th>Scenario</th>
+                            <th>Difficulty</th>
+                            <th class="num">Score</th>
+                            <th class="num">Minutes</th>
+                            <th class="num">Messages</th>
+                        </tr>
+                    </thead>
+                    <tbody id="caseRows"></tbody>
+                </table>
+                <p class="empty" id="casesEmpty" hidden>No evaluated cases match.</p>
+            </div>
+        </section>
+
+        <!-- Settings -->
+        <section class="panel" id="tab-settings" hidden>
+            <h1>Settings</h1>
+
+            <div class="card">
+                <h2>Gemini API key</h2>
+                <p class="status-line">Current: <strong id="keyStatus">-</strong></p>
+                <div class="field">
+                    <label class="label" for="keyInput">New API key</label>
+                    <input class="input" id="keyInput" type="password" autocomplete="off" placeholder="Paste a key from Google AI Studio">
+                </div>
+                <div class="actions">
+                    <button class="btn btn-ghost" id="keyTest" type="button">Test key</button>
+                    <button class="btn btn-primary" id="keySave" type="button">Save key</button>
+                    <button class="btn btn-danger" id="keyClear" type="button" hidden>Use deployment key</button>
+                </div>
+                <p class="result" id="keyResult"></p>
+
+                <h3 class="subhead">Models</h3>
+                <p class="muted">The list shows the Gemini models the current API key can use for chat.</p>
+                <div class="model-grid">
+                    <div class="field">
+                        <label class="label" for="chatModel">Chat model</label>
+                        <select class="input" id="chatModel"></select>
+                        <p class="hint">Customer bot, sentiment score, suggestions and emotion advice</p>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="evalModel">Evaluation model</label>
+                        <select class="input" id="evalModel"></select>
+                        <p class="hint">Scores the case when the agent closes it</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-ghost" id="modelRefresh" type="button">Refresh list</button>
+                    <button class="btn btn-ghost" id="modelTest" type="button">Test chat model</button>
+                    <button class="btn btn-primary" id="modelSave" type="button">Save models</button>
+                </div>
+                <p class="result" id="modelResult"></p>
+            </div>
+
+            <div class="card">
+                <h2>Enable AI password</h2>
+                <p class="muted">Agents enter this on the chat page to turn on sentiment, suggestions and emotion advice.</p>
+                <p class="status-line">Current: <strong id="aiPwStatus">-</strong>
+                    <button class="link-btn" id="aiPwShow" type="button">Show</button></p>
+                <div class="field">
+                    <label class="label" for="aiPwInput">New password</label>
+                    <div class="inline">
+                        <input class="input" id="aiPwInput" type="text" autocomplete="off" placeholder="At least 4 characters">
+                        <button class="btn btn-ghost" id="aiPwGenerate" type="button">Generate</button>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" id="aiPwSave" type="button">Save password</button>
+                    <button class="btn btn-danger" id="aiPwClear" type="button" hidden>Use deployment password</button>
+                </div>
+                <p class="result" id="aiPwResult"></p>
+            </div>
+
+            <p class="muted" id="settingsUpdated"></p>
+        </section>
+    </main>
+
+    <!-- Case detail -->
+    <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+    <aside class="drawer" id="caseDrawer" hidden aria-label="Chat detail">
+        <div class="drawer-head">
+            <div>
+                <h2 id="caseTitle"></h2>
+                <p class="muted" id="caseMeta"></p>
+            </div>
+            <button class="close" id="drawerClose" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="drawer-actions">
+            <button class="btn btn-ghost" id="caseExportDocx" type="button">Export Word</button>
+            <button class="btn btn-ghost" id="caseExportTxt" type="button">Export text</button>
+        </div>
+        <div class="case-scores" id="caseScores"></div>
+        <p class="case-comment" id="caseComment"></p>
+        <div class="conversation" id="caseConversation"></div>
+    </aside>
+
+    <div class="toast" id="toast" hidden></div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>

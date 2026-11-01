@@ -1,0 +1,318 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nida Bot : Customer Complaint Chatbot</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-layout">
+        <!-- Team Sidebar -->
+        <aside class="team-sidebar collapsed">
+            <div class="team-header collapsed">
+                <h3>Development Team</h3>
+                <button class="team-collapse-btn collapsed" id="teamCollapseBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            <div class="team-content collapsed" id="teamContent">
+            <div class="team-members">
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <img src="/static/aj.jpg" alt="Team Member" class="avatar-img">
+                    </div>
+                    <div class="member-info">
+                        <h4>รศ.ดร จงสวัสดิ์ จงวัฒน์ผล</h4>
+                        <p class="member-title">คณะบริหารธุรกิจ</p>
+                        <p class="member-role">สถาบันบัณฑิตพัฒนบริหารศาสตร์</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <img src="/static/pq.jpg" alt="Team Member" class="avatar-img">
+                    </div>
+                    <div class="member-info">
+                        <h4>ณัฐกุล พรเทพารักษ์</h4>
+                        <p class="member-title">Ph.D. in Business Administration</p>
+                        <p class="member-role">Project Manager</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <img src="/static/diff.png" alt="Team Member" class="avatar-img">
+                    </div>
+                    <div class="member-info">
+                        <h4>โชติพงษ์ แสงขุนทด</h4>
+                        <p class="member-title">Professional MBA#19</p>
+                        <p class="member-role">Agentic AI Developer</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Container -->
+        <div class="main-content-container">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <img src="/static/logo.jpg" alt="Logo" class="logo">
+                        <h1>NIDA HUB VIRTUAL ASSISTANT</h1>
+                    </div>
+                    <div class="ai-toggle-section">
+                        <div class="ai-status" id="aiStatus">Enable AI : OFF</div>
+                        <button class="config-btn" id="configBtn" title="Enable AI">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <span class="current-user" id="currentUser"></span>
+                        <button class="header-btn" id="logoutBtn" title="Sign out">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar collapsed">
+                <div class="config-panel">
+                    <div class="config-header collapsed">
+                        <h3>Chatbot Configuration</h3>
+                        <button class="collapse-btn collapsed" id="configCollapseBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="config-content collapsed" id="configContent">
+                    <div class="config-group">
+                        <label>Select Language</label>
+                        <select id="languageSelect">
+                            <option value="Thai">Thai</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+
+                    <div class="config-group">
+                        <label>Complaint Domain</label>
+                        <select id="domainSelect"><option value="">Select Domain...</option><option value="E-commerce">E-commerce</option><option value="Telecommunications">Telecommunications</option><option value="Healthcare">Healthcare</option><option value="Financial Services">Financial Services</option><option value="Travel &amp; Hospitality">Travel &amp; Hospitality</option><option value="Education">Education</option><option value="Government Services">Government Services</option><option value="Retail">Retail</option><option value="Energy &amp; Utilities">Energy &amp; Utilities</option></select>
+                    </div>
+
+                    <div class="config-group">
+                        <label>Job Position</label>
+                        <select id="jobPositionSelect" disabled="">
+                            <option value="">Select Job Position...</option>
+                        </select>
+                    </div>
+
+                    <div class="config-group">
+                        <label>View Complaint Detail</label>
+                        <button class="detail-btn" id="detailBtn" disabled="">View Details</button>
+                    </div>
+
+                    <div class="config-group">
+                        <label>Select Difficulty</label>
+                        <select id="difficultySelect">
+                            <option value="Common Case">Common Case</option>
+                            <option value="Uncommon Case">Uncommon Case</option>
+                            <option value="Extreme Case">Extreme Case</option>
+                        </select>
+                    </div>
+
+                    <div class="config-group">
+                        <label>Emotional Reform Style</label>
+                        <select id="reformSelect">
+                            <option value="Assertive Leadership">Assertive Leadership</option>
+                            <option value="Passive Leadership">Passive Leadership</option>
+                            <option value="Neutral Leadership">Neutral Leadership</option>
+                        </select>
+                    </div>
+
+                    <button class="start-btn" id="startBtn" disabled="">Generate Bot</button>
+                    <button class="restart-btn" id="restartBtn" style="display: none;">Restart</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="chat-layout">
+                    <!-- Left Panel - Emotion Reform -->
+                    <div class="left-panel" style="display: none;">
+                        <div class="emotion-panel" style="display: none;">
+                            <h4 id="emotionTitle">Emotion Reform : Assertive Leadership</h4>
+                            <div class="emotion-content">
+                                <button class="expand-btn">Click here to expand</button>
+                                <div class="emotion-text" id="emotionText">
+                                    The Assertive Leadership style provides clear and direct guidance to help customer service agents manage difficult interactions effectively. This comprehensive approach encourages open dialogue, builds confidence through decisive guidance, and helps agents take accountability while maintaining respect for their professional judgment and expertise.
+
+                                    When dealing with challenging customers, this leadership style offers specific, actionable advice to de-escalate situations effectively while supporting agent wellbeing and mental health. The assertive approach emphasizes clear communication boundaries, empathetic listening techniques, and structured problem-solving methodologies.
+
+                                    Key principles include: maintaining professional composure under pressure, using active listening to understand customer concerns, providing solutions with confidence and clarity, setting appropriate expectations, and knowing when to escalate issues to supervisors. This style promotes a balanced approach that protects both customer satisfaction and employee emotional wellness.
+
+                                    Agents are encouraged to use "I" statements, acknowledge customer feelings, offer multiple solution options when possible, and maintain documentation of all interactions. The assertive leadership framework also includes techniques for managing personal stress, recognizing emotional triggers, and developing resilience in high-pressure customer service environments.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Panel - Chat -->
+                    <div class="center-panel">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="welcome-message">
+                                <p>Configure the bot settings and click "Generate Bot" to start the conversation.</p>
+                            </div>
+                        </div>
+                        <!-- Suggestions Panel (moved above chat input) -->
+                        <div class="suggestions-panel" id="suggestionsPanel" style="display: none;">
+                            <h4>💡 Admin Suggestions:</h4>
+                            <div class="suggestions-list" id="suggestionsList">
+                                <!-- Suggestions will be populated here -->
+                            </div>
+                        </div>
+
+                        <div class="chat-input-area">
+                            <div class="input-container">
+                                <input type="text" id="chatInput" placeholder="Ask a question" disabled="">
+                                <button id="sendBtn" disabled="">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Sentiment & Controls -->
+                    <div class="right-panel" style="display: none;">
+                        <div class="sentiment-panel" style="display: none;">
+                            <h4>Negative Sentiment Score</h4>
+                            <div class="sentiment-slider">
+                                <input type="range" id="sentimentSlider" min="0" max="100" value="0" disabled="">
+                                <div class="sentiment-values">
+                                    <span>0.00</span>
+                                    <span>100.00</span>
+                                </div>
+                                <div class="sentiment-current">
+                                    Negative Sentiment Score : <span id="sentimentValue">0.0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="close-case-section">
+                                <button class="close-case-btn" id="closeCaseBtn" disabled="">Close Case</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+    <!-- Modals -->
+    <!-- AI Configuration Modal -->
+    <div class="modal" id="aiConfigModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🤖 Enable AI Configuration</h3>
+                <button class="close-btn" id="closeAiModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="config-group">
+                    <label for="passwordInput">🔐 Enter Password</label>
+                    <input type="password" id="passwordInput" placeholder="Enter your secure password...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelAiBtn">Cancel</button>
+                <button class="btn-primary" id="enableAiBtn">Enable AI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaint Detail Modal -->
+    <div class="modal" id="complaintModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complaint Detail</h3>
+                <button class="close-btn" id="closeComplaintModal">×</button>
+            </div>
+            <div class="modal-body" id="complaintDetail">
+                <!-- Complaint details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div class="modal" id="loadingModal">
+        <div class="modal-content loading-modal">
+            <div class="modal-body">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <h3 id="loadingTitle">Processing...</h3>
+                    <p id="loadingMessage">Please wait while we process your request.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Name Modal -->
+    <div class="modal" id="agentNameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Enter Agent Name</h3>
+                <button class="close-btn" id="closeAgentNameModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="config-group">
+                    <label for="agentNameInput">👤 Agent Name</label>
+                    <input type="text" id="agentNameInput" placeholder="Enter your beautiful name here..." required="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelAgentNameBtn">Cancel</button>
+                <button class="btn-primary" id="generateBotBtn">Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evaluation Modal -->
+    <div class="modal" id="evaluationModal">
+        <div class="modal-content evaluation-modal">
+            <div class="modal-header">
+                <h3>Evaluation Case</h3>
+                <button class="close-btn" id="closeEvaluationModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="evaluation-content">
+                    <p><strong>Great Job! You successfully solved another case for today!</strong></p>
+                    <p>Customer Interaction Evaluation</p>
+                    <hr>
+                    <div class="evaluation-info">
+                        <p><strong>Agent Name:</strong> <span id="evalAgentName"></span></p>
+                        <p><strong>Date/Time:</strong> <span id="evalDateTime"></span></p>
+                        <p><strong>Total Time for solve the case:</strong> <span id="evalTotalTime"></span> minutes</p>
+                    </div>
+                    <hr>
+                    <div class="evaluation-scores" id="evaluationScores">
+                        <!-- Scores will be populated here -->
+                    </div>
+                    <div class="evaluation-comment">
+                        <p><strong>Comment:</strong> <span id="evalComment"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="saveEvaluationBtn">Save Result &amp; Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+
+
+</body></html>

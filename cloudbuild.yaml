@@ -1,0 +1,9 @@
+# ใช้โดย scripts/deploy.sh สร้าง image แล้ว push เข้า Artifact Registry
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGE}", "."]
+images:
+  - "${_IMAGE}"
+options:
+  # build รันด้วย service account ของระบบเอง จึงเก็บ log ใน Cloud Logging แทน bucket ตั้งต้น
+  logging: CLOUD_LOGGING_ONLY

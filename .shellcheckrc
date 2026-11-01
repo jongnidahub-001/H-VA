@@ -1,0 +1,3 @@
+# ให้ shellcheck ตาม source ที่อ้าง path เทียบกับตำแหน่งสคริปต์ (เช่น scripts/lib/common.sh)
+source-path=SCRIPTDIR
+external-sources=true

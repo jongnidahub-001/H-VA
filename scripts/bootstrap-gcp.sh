@@ -77,10 +77,12 @@ check_permissions() {
   local perms=(
     run.services.create run.services.setIamPolicy artifactregistry.repositories.create
     cloudbuild.builds.create iam.serviceAccounts.create iam.serviceAccounts.actAs
-    storage.buckets.create storage.buckets.setIamPolicy resourcemanager.projects.setIamPolicy
+    storage.buckets.create resourcemanager.projects.setIamPolicy
     serviceusage.services.enable secretmanager.secrets.create secretmanager.secrets.setIamPolicy
   )
   [ -n "$GEMINI_KEY" ] || perms+=(apikeys.keys.create)
+  # ไม่ตรวจ storage.buckets.setIamPolicy: Owner ได้สิทธิ์นี้กับ bucket ใน project ผ่าน role legacy ของ bucket
+  # แต่ตรวจที่ระดับ project จะไม่เจอ
 
   local body response granted missing=() p
   body=$(printf '"%s",' "${perms[@]}")
